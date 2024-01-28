@@ -1,4 +1,5 @@
 import 'package:dogs_db_pseb_bridge/db/database_helper.dart';
+import 'package:dogs_db_pseb_bridge/screens/search_dog_screen.dart';
 import 'package:dogs_db_pseb_bridge/screens/update_dog_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,6 +19,16 @@ class _DogsListScreenState extends State<DogsListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dogs List'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return const SearchDogScreen();
+              }));
+            },
+            icon: const Icon(Icons.search),
+          )
+        ],
       ),
       body: FutureBuilder<List<Dog>>(
         future: DatabaseHelper.instance.getAllDogs(),
@@ -45,14 +56,11 @@ class _DogsListScreenState extends State<DogsListScreen> {
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           dog.name,
-                                          style: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
+                                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                                         ),
                                         const SizedBox(
                                           height: 10,
@@ -65,10 +73,7 @@ class _DogsListScreenState extends State<DogsListScreen> {
                                     children: [
                                       IconButton(
                                           onPressed: () async {
-                                            var result =
-                                                await Navigator.of(context)
-                                                    .push(MaterialPageRoute(
-                                                        builder: (context) {
+                                            var result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                                               return UpdateDogScreen(dog: dog);
                                             }));
 
@@ -84,44 +89,29 @@ class _DogsListScreenState extends State<DogsListScreen> {
                                                 context: context,
                                                 builder: (context) {
                                                   return AlertDialog(
-                                                    title: const Text(
-                                                        'Confirmation!'),
-                                                    content: const Text(
-                                                        'Are you sure to delete ?'),
+                                                    title: const Text('Confirmation!'),
+                                                    content: const Text('Are you sure to delete ?'),
                                                     actions: [
                                                       TextButton(
                                                           onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
+                                                            Navigator.of(context).pop();
                                                           },
-                                                          child:
-                                                              const Text('No')),
+                                                          child: const Text('No')),
                                                       TextButton(
                                                           onPressed: () async {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
+                                                            Navigator.of(context).pop();
 
                                                             // delete dog
 
-                                                            int result =
-                                                                await DatabaseHelper
-                                                                    .instance
-                                                                    .deleteDog(
-                                                                        dog.id!);
+                                                            int result = await DatabaseHelper.instance.deleteDog(dog.id!);
 
                                                             if (result > 0) {
-                                                              Fluttertoast
-                                                                  .showToast(
-                                                                      msg:
-                                                                          'Dog Deleted');
+                                                              Fluttertoast.showToast(msg: 'Dog Deleted');
                                                               setState(() {});
                                                               // build function will be called
                                                             }
                                                           },
-                                                          child: const Text(
-                                                              'Yes')),
+                                                          child: const Text('Yes')),
                                                     ],
                                                   );
                                                 });

@@ -70,7 +70,6 @@ class DatabaseHelper {
     return dogs;
   }
 
-
   // delete
   Future<int> deleteDog(int id) async {
     Database db = await instance.database;
@@ -85,4 +84,20 @@ class DatabaseHelper {
     return result;
   }
 
+  // read operation
+  Future<List<Dog>> searchDog({required String name}) async {
+    List<Dog> dogs = [];
+
+    Database db = await instance.database;
+
+    // read data from table
+    List<Map<String, dynamic>> listMap = await db.query('tbl_dog', where: 'name like ?', whereArgs: ['%$name%']);
+
+    for (var dogMap in listMap) {
+      Dog dog = Dog.fromMap(dogMap);
+      dogs.add(dog);
+    }
+
+    return dogs;
+  }
 }
